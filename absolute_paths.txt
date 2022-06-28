@@ -1,0 +1,10 @@
+places where absolute paths have been used (should be fixed before deployment)
+
+app.py (
+    cursor_path   
+)
+
+entities.py (
+    Player.player_img_path
+    Bullet.bullet_img_path
+)
