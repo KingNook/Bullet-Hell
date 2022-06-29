@@ -28,11 +28,13 @@ cursor = pyglet.window.ImageMouseCursor(cursor_image, cursor_image.width // 2, c
 window.set_mouse_cursor(cursor)
 '''
 
-player = entities.Player()   
-bullet = entities.Bullet()
+player = entities.Player()
+bullet = entities.Bullet(target=(cursor.x, HEIGHT))
+
+projectiles = []
 
 # EXITING THE WINDOW
-@window.event
+@window.event   
 def on_key_press(symbol, modifiers):
     global end_loop
 
@@ -49,6 +51,16 @@ def on_close():
 @window.event
 def on_draw():
     window.clear()
+
+    for projectile in projectiles:
+        projectile.move()
+        projectile.draw()
+
+    # move bullet
+    bullet.move()
+
+    bullet.draw()
+
 
     # move player to mouse cursor
     player.move(cursor.x, cursor.y)
@@ -69,6 +81,11 @@ def on_mouse_drag(x, y, d1, d2, button, modifiers):
 
     cursor.x = x
     cursor.y = y
+
+@window.event
+def on_mouse_press(x, y, button, modifiers):
+
+    projectiles.append(entities.Bullet(target = (player.x, HEIGHT), x_pos = player.x, y_pos = player.y))
 
 while not end_loop:
     pyglet.clock.tick()

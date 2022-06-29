@@ -50,3 +50,16 @@ def unit_vector_ang(angle: float) -> Vector:
     magnitude = mag((1,y))
 
     return scale(1/magnitude, [1,y])
+
+def rad_to_deg(angle: float) -> float:
+    ''' converts angle from radians to degrees'''
+    return angle * 360 / math.tau
+
+# direction of a vector from (0, 0)
+def dir(point: Vector) -> float:
+    ''' 
+    direction of a point from (0, 0)
+    returns the bearing FROM THE POSITIVE X DIRECTION // gives a value between -pi and pi radians
+    '''
+    # should be returning the direction from position to a point
+    return math.atan2(point[1], point[0])

@@ -23,8 +23,6 @@ class Entity:
         self._x = x_pos
         self._y = y_pos
 
-        print(max_speed)
-
         self.max_speed = max_speed
 
         self.dx = 0
@@ -52,16 +50,23 @@ class Entity:
 
         return (self.dx, self.dy)
 
+    def set_pos(self, x, y):
+        self.x = x
+        self.y = y
+
     def dir_vector(self, point: extras.Vector) -> extras.Vector:
         ''' returns the direction vector to a point '''
 
         return [point[0] - self.x, point[1] - self.y]
 
-    # direction from self to point
-    def dir(self, point: extras.Vector) -> float:
-        ''' returns the bearing FROM THE POSITIVE X DIRECTION // gives a value between -pi and pi radians'''
-        # should be returning the direction from position to a point
-        return atan2(point[1] - self.y, point[0] - self.x)
+    # rotation getter
+    @property
+    def rotation(self):
+        return self.sprite.rotation
+
+    @rotation.setter
+    def rotation(self, value):
+        self.sprite.rotation = value
 
     # x getter
     @property
@@ -82,24 +87,43 @@ class Entity:
         self.sprite.y = val
 
 class Player(Entity):
+
+    friendly = True
     
     player_img_path = 'D:/Development/Useful Stuff/applet/pyglet sprite/images/spaceship_64.png'
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, image_path=Player.player_img_path, **kwargs)
 
         # player has a higher max speed than other entities
-        self.max_speed = 15
+        self.max_speed = 5
 
-    def update_pos(self):
-        pass
+    def update_velocity(self, x, y):
 
-    def update_vel(self):
-        pass
+        direction =  90 - extras.rad_to_deg(extras.dir((self.dx, self.dy))) 
+        self.rotation = direction
+
+        return super().update_velocity(x, y)
+
+    def move(self, x=0, y=0):
+
+        if self.dx == 0 and self.dy == 0:
+            self.rotation = 0
+
+        return super().move(x, y)
 
 class Bullet(Entity):
 
+    friendly = True
+
     bullet_img_path = 'D:/Development/Useful Stuff/applet/pyglet sprite/images/bullet_16.png'
     
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, target = (0, 0), **kwargs):
         super().__init__(*args, image_path=Bullet.bullet_img_path, **kwargs)
+
+        self.target_x = target[0]
+        self.target_y = target[1]
+
+    def move(self):
+        return super().move(self.target_x, self.target_y)
