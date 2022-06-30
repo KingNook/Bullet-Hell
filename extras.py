@@ -63,3 +63,8 @@ def dir(point: Vector) -> float:
     '''
     # should be returning the direction from position to a point
     return math.atan2(point[1], point[0])
+
+
+# Matrices
+def matrix2():
+    return [[0, 0], [0, 0]]
